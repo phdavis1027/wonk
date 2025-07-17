@@ -1,0 +1,9 @@
+[package]
+name = "wonkify"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+quote = "1.0.40"
+rule_language_parser = { path = "../rule_language_parser" }
+walkdir = "2.5.0"

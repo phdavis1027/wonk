@@ -1,0 +1,6 @@
+[package]
+name = "rule_language_parser"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
