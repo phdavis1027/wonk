@@ -1,0 +1,8 @@
+[package]
+name = "ric"
+version = "0.1.0"
+edition = "2021"
+description = "RiC (Rust iRODS Client)"
+
+[dependencies]
+quick-xml = "0.38.0"
