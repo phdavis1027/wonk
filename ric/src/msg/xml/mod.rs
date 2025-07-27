@@ -21,11 +21,22 @@ impl ProtocolEncodingPrivate for XML {
         IrodsProt::XML
     }
 
-    fn encode_private<M>(msg: &M, sink: &mut [u8]) -> Result<usize, IrodsError>
+    fn encode_unbounded_private<M>(msg: &M, sink: &mut Vec<u8>) -> Result<usize, IrodsError>
     where
         M: Serializable,
     {
-        XMLSerializable::to_xml::<M>(msg, sink)
+        XMLSerializable::to_xml::<M, _>(msg, sink)
+    }
+
+    fn encode_bounded_private<M, const N: usize>(
+        msg: &M,
+        sink: &mut [u8; N],
+    ) -> Result<usize, IrodsError>
+    where
+        M: Serializable,
+    {
+        XMLSerializable::to_xml::<M, _>(msg, sink)
+    
     }
 
     fn decode_private<'de_buf, M>(src: &'de_buf [u8]) -> Result<M, IrodsError>

@@ -6,7 +6,14 @@ use super::irods_prot::IrodsProt;
 pub(crate) trait ProtocolEncodingPrivate {
     fn as_enum() -> IrodsProt;
 
-    fn encode_private<M>(msg: &M, sink: &mut [u8]) -> Result<usize, IrodsError>
+    fn encode_unbounded_private<M>(msg: &M, sink: &mut Vec<u8>) -> Result<usize, IrodsError>
+    where
+        M: Serializable;
+
+    fn encode_bounded_private<M, const N: usize>(
+        msg: &M,
+        sink: &mut [u8; N],
+    ) -> Result<usize, IrodsError>
     where
         M: Serializable;
 
@@ -22,9 +29,14 @@ pub(crate) trait ProtocolEncodingPrivate {
 pub trait ProtocolEncoding {
     fn as_enum() -> IrodsProt;
 
-    fn encode<M, V>(msg: &M, sink: V) -> Result<usize, IrodsError>
+    fn encode_unbounded<M, V>(msg: &M, sink: V) -> Result<usize, IrodsError>
     where
-        V: AsMut<[u8]>,
+        V: AsMut<Vec<u8>>,
+        M: Serializable;
+
+    fn encode_bounded<M, V, const N: usize>(msg: &M, sink: V) -> Result<usize, IrodsError>
+    where
+        V: AsMut<[u8; N]>,
         M: Serializable;
 
     fn decode_owning<M, V>(src: V) -> Result<M, IrodsError>
@@ -46,12 +58,20 @@ where
         Self::as_enum()
     }
 
-    fn encode<M, V>(msg: &M, mut sink: V) -> Result<usize, IrodsError>
+    fn encode_unbounded<M, V>(msg: &M, mut sink: V) -> Result<usize, IrodsError>
     where
-        V: AsMut<[u8]>,
+        V: AsMut<Vec<u8>>,
         M: Serializable,
     {
-        Self::encode_private(msg, sink.as_mut())
+        Self::encode_unbounded_private(msg, sink.as_mut())
+    }
+
+    fn encode_bounded<M, V, const N: usize>(msg: &M, mut sink: V) -> Result<usize, IrodsError>
+    where
+        V: AsMut<[u8; N]>,
+        M: Serializable,
+    {
+        Self::encode_bounded_private(msg, sink.as_mut())
     }
 
     fn decode_owning<M, V>(src: V) -> Result<M, IrodsError>

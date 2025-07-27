@@ -1,3 +1,5 @@
+use std::io::Read;
+
 use crate::{
     error::IrodsError,
     msg::{
@@ -9,8 +11,9 @@ use crate::{
 };
 
 impl<'de_buf> XMLSerializable for StartupPack<'de_buf> {
-    fn to_xml<M>(&self, sink: &mut [u8]) -> Result<usize, IrodsError>
+    fn to_xml<M, R>(&self, sink: R) -> Result<usize, IrodsError>
     where
+        R: AsMut<[u8]>,
         M: Serializable,
     {
         let mut cursor = Cursor::new(sink);
