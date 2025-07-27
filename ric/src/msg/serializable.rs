@@ -1,3 +1,5 @@
 use std::fmt::Debug;
 
-pub(crate) trait Serializable: XMLDeserializable + Debug {}
+use super::xml::xml_serializable::XMLSerializable;
+
+pub(crate) trait Serializable: XMLSerializable + Debug {}

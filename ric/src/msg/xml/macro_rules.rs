@@ -1,17 +1,15 @@
 pub(crate) mod macro_imports {
-    pub(crate) use std::io::{Write, Cursor};
-    pub(crate) use quick_xml::{events::{
-        Event,
-        BytesStart,
-        BytesEnd,
-        BytesText,
-    }, writer::Writer};
+    pub(crate) use quick_xml::{
+        events::{BytesEnd, BytesStart, BytesText, Event},
+        writer::Writer,
+    };
+    pub(crate) use std::io::{Cursor, Write};
 }
 
 #[macro_export]
 macro_rules! tag {
     ($writer:ident, $name:expr, $value:expr) => {
-        $writer.write_event(Event::Start(BytesStart::new($name)))?; 
+        $writer.write_event(Event::Start(BytesStart::new($name)))?;
         $writer.write_event(Event::Text(BytesText::new($value)))?;
         $writer.write_event(Event::End(BytesEnd::new($name)))?;
     };
@@ -42,7 +40,5 @@ macro_rules! tag_end {
 
 #[macro_export]
 macro_rules! escape {
-    ($value:expr, $escape:ident) => {
-        
-    }
+    ($value:expr, $escape:ident) => {};
 }

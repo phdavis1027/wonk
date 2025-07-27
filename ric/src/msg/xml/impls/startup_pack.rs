@@ -1,13 +1,15 @@
 use crate::{
-    error::IrodsError, msg::{
+    error::IrodsError,
+    msg::{
         serializable::Serializable,
         types::startup_pack::StartupPack,
         xml::{macro_rules::macro_imports::*, xml_serializable::XMLSerializable},
-    }, tag_end, tag_fmt, tag_start, tag
+    },
+    tag, tag_end, tag_fmt, tag_start,
 };
 
 impl<'de_buf> XMLSerializable for StartupPack<'de_buf> {
-    fn to_xml<M>(&self, sink: &mut Vec<u8>) -> Result<usize, IrodsError>
+    fn to_xml<M>(&self, sink: &mut [u8]) -> Result<usize, IrodsError>
     where
         M: Serializable,
     {
@@ -22,11 +24,7 @@ impl<'de_buf> XMLSerializable for StartupPack<'de_buf> {
         tag_fmt!(writer, "reconnFlag", "{}", self.reconn_flag);
         tag_fmt!(writer, "connectCnt", "{}", self.connect_cnt);
 
-        tag!(
-            writer, 
-            "proxyUser", 
-            self.proxy_user.as_ref()
-        );
+        tag!(writer, "proxyUser", self.proxy_user.as_ref());
 
         tag_end!(writer, "StartupPack_PI");
 
